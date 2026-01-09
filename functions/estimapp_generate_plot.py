@@ -21,8 +21,6 @@ import re
 import plotly.express as px
 import plotly.io as pio
 
-
-#from estimapp_set_local_datapath import estimapp_set_local_datapath
 from functions.estimapp_open_icon import estimapp_open_icon
 from functions.estimapp_merge_stimpairs import estimapp_merge_stimpairs
 from functions.estimapp_rearrange_electrodescheme import estimapp_rearrange_electrodescheme

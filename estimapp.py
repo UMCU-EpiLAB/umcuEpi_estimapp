@@ -82,7 +82,7 @@ def layout_home():
         estimapp_create_upload_button("upload-electrodes", "upload-overview-electrodes", "Upload overview electrodes", 
                                       "xlsx file containing electrode names and ordering. Example file: ","https://doi.org/10.34894/KMT3VI"),
         estimapp_create_upload_button("upload-annotations", "upload-overview-annotations", "Upload overview annotations", 
-                                      "csv file(s) containing annotations from iEEG software. Multiple files can be uploaded at once. For Micromed users: these files can be compiled automatically from a Micromed TRC using the Export Notes option in Micromed. Example files: ","https://doi.org/10.34894/KMT3VI", multiple=True),
+                                      "csv file(s) containing annotations from iEEG software. Multiple files can be uploaded at once. \n For Micromed users: these files can be compiled automatically from a Micromed TRC using the Export Notes option in Micromed. Example files: ","https://doi.org/10.34894/KMT3VI", multiple=True),
         
         dmc.Text("Optional, required for 3D rendering:", fw=500),
         estimapp_create_upload_button("upload-coordinates", "upload-electrode-coordinates", "Upload electrode coordinates", 

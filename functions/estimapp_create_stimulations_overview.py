@@ -14,15 +14,13 @@ Input:
     
     stimPeriod: a dataframe containing all Stim_on; and Stim_off; annotations including annotation index
     
-    stimTypes_list: a list of all stimulation type to be included
-    
 Output:
     stimulations_df: The dataframe contains the stimulated electrodes, the index in the annotations dataframe,
         the category of evoked clinical symptoms, free text annotations after a stimulation pair,
         and the stimulation type.
     
-    filtered_stimulations_df: The dataframe stimulations_df is filtered to only show stimulations of stimType 
-        in stimTypes_list, only when Category or Free text is filled in. This df is used to show the table 
+    filtered_stimulations_df: The dataframe stimulations_df is filtered to only show stimulations 
+    when Category or Free text is filled in. This df is used to show the table 
         in the app.
 
     categories_abbreviations: A dictionary with key the abbreviation of the category 
@@ -93,9 +91,6 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
         stimType = stimPeriod.loc[stimPeriod.index[period], column_name]        
         stimType = stimType[8:]
 
-        # Check if stimType is spelled correctly
-        #if stimType not in stimTypes_list:
-        #    print("stimType " + stimType + " is not in " + ' '.join(map(str, stimTypes_list)) + ". Check if annotation is spelled correctly, the annotation will be ignored.")
         stimulations_row = stimulations_df["AnnotationIndex"].between(idx_stimOn, idx_stimOff) 
         stimulations_df.loc[stimulations_row, "Stim type"] = stimType
     del period, idx_stimOn, idx_stimOff, stimType, stimulations_row
@@ -117,7 +112,7 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
         current_freeText = stimulations_df.loc[stimulations_row,"Free text"]
         
         current_annotation = freeText_df.at[index, column_name]
-        if current_annotation == "niets":
+        if current_annotation == "nothing":
             continue # do not show in stimulations overview
         
         if not isinstance(current_freeText, list) and pd.isna(current_freeText):
@@ -130,11 +125,10 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
     del index, smaller_values, smaller_closest_value, stimulations_row, current_freeText, current_annotation
     del indices_categories, indices_stimulations, indices_all, indices_freetext
     
-    # Filter table: only stimulations of stimType in stimTypes_list; 
+    # Filter table: 
     # only when Category or Free text is filled in
     filtered_stimulations_df = stimulations_df[
-        (stimulations_df['Category'].notna() | stimulations_df['Free text'].notna())] #&
-    #    (stimulations_df['Stim type'].isin(stimTypes_list))]
+        (stimulations_df['Category'].notna() | stimulations_df['Free text'].notna())]
     
     filtered_stimulations_df = filtered_stimulations_df.fillna("")
     

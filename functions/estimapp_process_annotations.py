@@ -17,8 +17,8 @@ Output:
         the category of evoked clinical symptoms, free text annotations after a stimulation pair,
         and the stimulation type.
         
-    filtered_stimulations_df: The dataframe stimulations_df is filtered to only show stimulations of stimType 
-        in stimTypes_list, only when Category or Free text is filled in. This df is used to show the table 
+    filtered_stimulations_df: The dataframe stimulations_df is filtered to show 
+    stimulations only when Category or Free text is filled in. This df is used to show the table 
         in the app.
 
     categories: A dictionary with key the abbreviation of the category 
@@ -65,10 +65,7 @@ def estimapp_process_annotations(annotations_df, column_name="Comment"):
     annotated_categories = estimapp_localize_annotated_categories(filtered_annotations_df, column_name)
     print("Annotated categories are:", annotated_categories)
     
-    # Create stimulations_df which contains all stimulations
-    #stimTypes_list = ["CHOCS1", "CHOCS2", "TRENI"]
-    #print("Stimulation types inluded in analysis are: ", stimTypes_list)
-    
+    # Create stimulations_df which contains all stimulations  
     stimulations_df, filtered_stimulations_df, categories = estimapp_create_stimulations_overview(filtered_annotations_df, annotated_categories, stimPeriod, column_name)
     
     return stimulations_df, filtered_stimulations_df, categories
