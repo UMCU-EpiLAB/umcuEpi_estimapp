@@ -15,8 +15,6 @@ Output:
 """
 
 import numpy as np
-import matplotlib
-matplotlib.use('agg')
 import re
 import plotly.express as px
 import plotly.io as pio
