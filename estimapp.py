@@ -52,6 +52,9 @@ from functions.estimapp_create_upload_button import estimapp_create_upload_butto
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
 app.title = "EStiMapp"
+
+# To run on server:
+server = app.server # Turn this line off when running locally
   
 # Layouts
 app.layout = dmc.MantineProvider(
@@ -451,5 +454,11 @@ def display_hover_coordinates(hoverData):
     ])
 
 # Run app
+
+# To run locally:
+# if __name__ == "__main__":
+#    app.run(debug=True)
+
+# To run on server:
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run_server(host="0.0.0.0", port=int(os.environ.get("PORT", 8050)), debug=False)
