@@ -52,10 +52,8 @@ from functions.estimapp_generate_3d_plot import estimapp_generate_3d_plot
 from functions.estimapp_create_upload_button import estimapp_create_upload_button
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True)
+server = app.server
 app.title = "EStiMapp"
-
-# To run on server:
-server = app.server # Turn this line off when running locally
   
 # Layouts
 app.layout = dmc.MantineProvider(
@@ -454,12 +452,10 @@ def display_hover_coordinates(hoverData):
         html.Div(f"x: {x:.2f}, y: {y:.2f}, z: {z:.2f}")
     ])
 
-# Run app
-
-# To run locally:
-# if __name__ == "__main__":
-#    app.run(debug=True)
-
-# To run on server:
+# To run app on server:
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 8050)), debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8050)), debug=True)
+
+# To run app locally:
+#if __name__ == "__main__":
+#    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 8050)), debug=True)
