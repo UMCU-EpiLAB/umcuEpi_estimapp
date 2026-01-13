@@ -454,7 +454,7 @@ def display_hover_coordinates(hoverData):
 
 # To run app on server:
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8050)), debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8050)), debug=False)
 
 # To run app locally:
 #if __name__ == "__main__":
