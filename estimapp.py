@@ -43,6 +43,7 @@ import io
 import pandas as pd
 import trimesh
 import csv
+import os
 
 from functions.estimapp_process_annotations import estimapp_process_annotations
 from functions.estimapp_generate_plot import estimapp_generate_plot
@@ -461,4 +462,4 @@ def display_hover_coordinates(hoverData):
 
 # To run on server:
 if __name__ == "__main__":
-    app.run_server(host="0.0.0.0", port=int(os.environ.get("PORT", 8050)), debug=False)
+    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 8050)), debug=True)
