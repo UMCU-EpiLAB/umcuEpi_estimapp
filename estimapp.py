@@ -94,7 +94,7 @@ def layout_home():
 
         html.Br(),
         dmc.Button("Create EStiMapp", id="submit-btn"),
-        dmc.Text("EStiMapp is a visualization tool that was evaluated by the CE-committee of the UMC Utrecht and was labeled not to be a medical device. The use or reliance of any information contained on the site is solely at your own risk.", 
+        dmc.Text("EStiMapp is a visualization tool that was evaluated by the CE-committee of the UMC Utrecht and was labeled not to be a medical device. The use or reliance of any information contained on the site is solely at your own risk. Data privacy cannot be guaranteed when using the app hosted on Render. For patient data, the locally installed version is recommended.",
                  fw=300, ta="center", w="450px"),
         html.Div(id="warning-alert"),
         ], align="center", gap="sm"),size="sm")
