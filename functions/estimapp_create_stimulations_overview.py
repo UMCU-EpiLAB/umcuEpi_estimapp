@@ -35,7 +35,8 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
     pattern = r'([a-zA-Z]{1,3})(\d{1,2})(?:\s*-?\s*)\1(\d{1,2})' # group 1 (1-3 letters) + group 2 (1 or 2 digits) + optional space + group 1 + group 3 (1 or 2 digits)
     count_stimulations = 0
     for i in range(len(annotations_df)):
-        matches = re.findall(pattern, annotations_df.loc[i,column_name])
+        annotation = annotations_df.loc[i,column_name]
+        matches = re.findall(pattern, annotation)
             
         # Filter only where the digits are different
         filtered_matches = [f"{m[0]}{m[1]} {m[0]}{m[2]}" for m in matches if m[1] != m[2]]
@@ -50,6 +51,13 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
             stimulations_df = pd.concat([stimulations_df, pd.DataFrame(split_matches, columns=['Electrode 1', 'Electrode 2'])],
                                         ignore_index=True)
             stimulations_df.loc[count_stimulations, 'AnnotationIndex'] = i
+            
+            # Copy settings to stimtype
+            match = re.search(pattern, annotation)
+            stim_settings = annotation[match.end():]
+            if stim_settings:
+                stimulations_df.loc[count_stimulations, 'Settings'] = stim_settings
+                
             count_stimulations += 1
     
     del matches, filtered_matches, split_matches, count_stimulations, i, pattern # housekeeping
@@ -131,5 +139,9 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
         (stimulations_df['Category'].notna() | stimulations_df['Free text'].notna())]
     
     filtered_stimulations_df = filtered_stimulations_df.fillna("")
+    
+    # Merge Stimtype and Settings column
+    filtered_stimulations_df['Stim type'] = filtered_stimulations_df['Stim type'] + filtered_stimulations_df['Settings']
+    filtered_stimulations_df = filtered_stimulations_df.drop(['Settings'], axis=1)
     
     return stimulations_df, filtered_stimulations_df, categories_abbreviations
