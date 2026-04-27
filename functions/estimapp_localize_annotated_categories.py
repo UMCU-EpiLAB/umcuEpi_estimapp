@@ -15,7 +15,7 @@ Output:
 """
 
 def estimapp_localize_annotated_categories(annotations_df, column_name):
-    abbreviations = ['mo', 'sm', 'cm', 'la', 'vest', 'auto', 'aff', 'cog', 'sts', 'vis', 'audi', 'og', 'ot', '?', '!', 'sz', 'AD']
+    abbreviations = ['mo', 'em', 'cm', 'la', 'vest', 'auto', 'aff', 'cog', 'sts', 'vis', 'audi', 'og', 'ot', '?', '!', 'sz', 'AD']
     categories = {}
 
     for abbr in abbreviations:

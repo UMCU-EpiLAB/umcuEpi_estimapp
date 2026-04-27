@@ -31,7 +31,7 @@ import re
     
 def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod, column_name):
 
-    stimulations_df = pd.DataFrame(columns=['Electrode 1', 'Electrode 2', 'AnnotationIndex', 'Category', 'Free text', 'Stim type'])
+    stimulations_df = pd.DataFrame(columns=['Electrode 1', 'Electrode 2', 'AnnotationIndex', 'Category', 'Free text', 'Stim type', 'Settings'])
     pattern = r'([a-zA-Z]{1,3})(\d{1,2})(?:\s*-?\s*)\1(\d{1,2})' # group 1 (1-3 letters) + group 2 (1 or 2 digits) + optional space + group 1 + group 3 (1 or 2 digits)
     count_stimulations = 0
     for i in range(len(annotations_df)):
@@ -67,7 +67,7 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
         stimulations_df.loc[idx,"Electrode 2"] = re.sub(r'^([a-zA-Z]{1,3})(\d)$', r'\g<1>0\g<2>', stimulations_df.loc[idx,"Electrode 2"])
 
     # Add stimtype, categories and free text to stimulations_df
-    categories_abbreviations = {'mo':'motor', 'sm':'elementary motor', 'cm':'complex motor','la':'language', 'vest':'vestibular', 'auto':'autonomic', 
+    categories_abbreviations = {'mo':'motor', 'em':'elementary motor', 'cm':'complex motor','la':'language', 'vest':'vestibular', 'auto':'autonomic',
                                 'aff':'affective', 'cog':'cognitive', 'sts':'somatosensory', 'vis':'visual', 
                                 'audi':'auditory', 'og':'olfactory or gustatory', 'ot':'other', '?':'patient in doubt', 
                                 '!':'pay attention', 'sz':'seizure', 'AD':'after discharge'}
@@ -90,7 +90,7 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
             elif cat_full not in current_value:
                 current_value.append(cat_full)
                 stimulations_df.at[stimulations_row, "Category"] = current_value
-    del cat, smaller_values, smaller_closest_value, stimulations_row, current_value, cat_full, index # housekeeping
+    #del cat, smaller_values, smaller_closest_value, stimulations_row, current_value, cat_full, index # housekeeping
 
 
     for period in range(0,len(stimPeriod.index),2):
@@ -139,9 +139,5 @@ def estimapp_create_stimulations_overview(annotations_df, categories, stimPeriod
         (stimulations_df['Category'].notna() | stimulations_df['Free text'].notna())]
     
     filtered_stimulations_df = filtered_stimulations_df.fillna("")
-    
-    # Merge Stimtype and Settings column
-    filtered_stimulations_df['Stim type'] = filtered_stimulations_df['Stim type'] + filtered_stimulations_df['Settings']
-    filtered_stimulations_df = filtered_stimulations_df.drop(['Settings'], axis=1)
     
     return stimulations_df, filtered_stimulations_df, categories_abbreviations

@@ -184,17 +184,38 @@ def show_result(data):
         decoded_excel = pd.read_excel(io.BytesIO(decoded), sheet_name=sheet_name, keep_default_na=False)
         return decoded_excel
 
+    # def decode_annotations(content):
+    #     _, content_string = content.split(',')
+    #     decoded = base64.b64decode(content_string)
+        
+    #     annotations = pd.read_csv(io.BytesIO(decoded),
+    #         encoding="latin1",     # handles special characters like °, é, etc.
+    #         sep="\t",              # tab-delimited
+    #         engine="python",       # more forgiving parser
+    #         quoting=csv.QUOTE_NONE # <-- ignore quotes completely
+    #     )     
+
+    #     return annotations
+    
     def decode_annotations(content):
-        _, content_string = content.split(',')
+        content_type, content_string = content.split(',')
         decoded = base64.b64decode(content_string)
         
-        annotations = pd.read_csv(io.BytesIO(decoded),
-            encoding="latin1",     # handles special characters like °, é, etc.
-            sep="\t",              # tab-delimited
-            engine="python",       # more forgiving parser
-            quoting=csv.QUOTE_NONE # <-- ignore quotes completely
-        )     
-
+        if 'csv' in content_type or 'text' in content_type:
+            annotations = pd.read_csv(io.BytesIO(decoded),
+                encoding="latin1",
+                sep="\t",
+                engine="python",
+                quoting=csv.QUOTE_NONE
+            )
+        elif 'excel' in content_type or 'spreadsheetml' in content_type or 'xls' in content_type:
+            #xls = pd.ExcelFile(io.BytesIO(decoded))
+            #sheet_name = xls.sheet_names[0]  # take first sheet
+            annotations = pd.read_excel(io.BytesIO(decoded), keep_default_na=False)
+            print('excel file is decoded')
+        else:
+            raise ValueError(f"Unsupported file type: {content_type}")
+        
         return annotations
     
     def decode_ply(content):
@@ -216,6 +237,8 @@ def show_result(data):
     print('decoding electrodes')    
     decoded_electrodes = decode_excel(electrodes) # df   
     stimulations_df, processed_annotations, categories_dict = estimapp_process_annotations(annotations_df)
+    print("stimulations_df", stimulations_df.head())
+    print("processed_annotations:", processed_annotations)
     
     # 3D
     coordinates_df = decode_excel(coordinates) if data.get("coordinates") else None
@@ -314,6 +337,7 @@ def update_result_tabs(tab, data):
                       {"name": "Category", "id": "Category", "editable": True, "presentation": "dropdown"},
                       {"name": "Free text", "id": "Free text", "editable": True},
                       {"name": "Stim type", "id": "Stim type", "editable": False},
+                      {"name": "Settings", "id": "Settings", "editable": False},
 ],
             dropdown = {
                 "Category": {
