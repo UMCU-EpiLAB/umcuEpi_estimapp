@@ -37,27 +37,28 @@ from functions.estimapp_localize_annotated_categories import estimapp_localize_a
 from functions.estimapp_define_stimulation_period import estimapp_define_stimulation_period
 from functions.estimapp_create_stimulations_overview import estimapp_create_stimulations_overview
 
-def estimapp_process_annotations(annotations_df, column_name="Comment"):
+def estimapp_process_annotations(annotations_df):
     print("process annotations")    
     print("define stimulation period")
     
     # Define stimulation period
-    stimPeriod = estimapp_define_stimulation_period(annotations_df, column_name)
+    column_name = next((c for c in ['Comment', 'Text'] if c in annotations_df.columns), annotations_df.columns[0])
+    stim_period = estimapp_define_stimulation_period(annotations_df, column_name)
     print("remove annotations outside stimulation period")
-    print("stimPeriod", stimPeriod.shape, stimPeriod[column_name])
+    print("stimPeriod", stim_period.shape, stim_period[column_name])
     
     # Remove annotations outside stimulation period
     filtered_annotations_df = pd.DataFrame()
-    if all(stimPeriod.iloc[::2, ::2][column_name].str.contains("Stim_on")) and len(stimPeriod) %2 == 0: 
+    if all(stim_period.iloc[::2, ::2][column_name].str.contains("Stim_on")) and len(stim_period) %2 == 0:
         # Stim_on and off annotations complete
-        for period in range(0,len(stimPeriod.index),2):
-            idx_stimOn = stimPeriod.index[period]
-            idx_stimOff = stimPeriod.index[period + 1]
+        for period in range(0,len(stim_period.index),2):
+            idx_stimOn = stim_period.index[period]
+            idx_stimOff = stim_period.index[period + 1]
             annotations_currentPeriod = annotations_df[idx_stimOn:idx_stimOff+1] 
             filtered_annotations_df = pd.concat([filtered_annotations_df, annotations_currentPeriod], ignore_index=True)
     else: 
         raise ValueError("Stim_on or Stim_off annotation missing, adjust in annotations overview Excel")
-    del idx_stimOn, idx_stimOff, annotations_currentPeriod, period, annotations_df, stimPeriod
+    del idx_stimOn, idx_stimOff, annotations_currentPeriod, period, annotations_df, stim_period
     
     print("Filtered annotations", type(filtered_annotations_df), filtered_annotations_df.shape)
     stimPeriod = estimapp_define_stimulation_period(filtered_annotations_df, column_name)

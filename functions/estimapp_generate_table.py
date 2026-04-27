@@ -43,6 +43,7 @@ def estimapp_generate_table(stimulations_df, sort_by_column="Electrode 1"):
         return str(cell)
     
     visible_columns = [col for col in stimulations_df.columns if col != "AnnotationIndex"]
+    print(visible_columns)
     formatted_df = pd.DataFrame([{col: format_cell(col, row[col]) for col in visible_columns}
         for _, row in stimulations_df.iterrows()])
     if sort_by_column in formatted_df.columns:
