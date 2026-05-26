@@ -28,7 +28,7 @@ def estimapp_rearrange_electrodescheme(stimulations_df, electrodes_df):
     topo, channel = estimapp_localize_electrode_positions(electrodes_df)
     
     nr_of_categories = stimulations_df['Category'].str.len()
-    idx_multiple_categories = nr_of_categories[nr_of_categories > 2].index
+    idx_multiple_categories = nr_of_categories[nr_of_categories > 1].index
     for idx in idx_multiple_categories:
         elec1 = stimulations_df["Electrode 1"].loc[idx]
         elec2 = stimulations_df["Electrode 2"].loc[idx]
@@ -36,7 +36,7 @@ def estimapp_rearrange_electrodescheme(stimulations_df, electrodes_df):
         idx_channel1 = channel.index(elec1)
         idx_channel2 = channel.index(elec2)
         
-        nr_of_extra_lines = nr_of_categories[idx] - 2
+        nr_of_extra_lines = nr_of_categories[idx] - 1
         check_column_x = topo['x'][idx_channel1] - nr_of_extra_lines
         check_row_y = topo['y'][idx_channel1] - nr_of_extra_lines 
         if topo['x'][idx_channel1] == topo['x'][idx_channel2] and check_column_x >= 0 and electrodes_df.loc[check_column_x].notna().any():
